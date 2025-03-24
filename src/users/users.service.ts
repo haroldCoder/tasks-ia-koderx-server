@@ -6,6 +6,7 @@ import { UserNotFoundException } from 'src/shared/exceptions/users/user-not-foun
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserBadRequestException } from 'src/shared/exceptions/users/user-bad-request';
 import { AuthService } from 'src/auth/auth.service';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -42,6 +43,7 @@ export class UsersService {
             }
 
             if (await this.getUserByTerm(user)) {
+                await this.updateUser({ times_logged: 1 }, user.email || user.celphone);
                 return await this.authService.login(user);
             }
 
@@ -57,6 +59,8 @@ export class UsersService {
         }
         catch (error) {
             if (error instanceof UserBadRequestException || error instanceof UserNotFoundException) {
+                console.log(error);
+
                 throw error;
             }
             throw new Error(`${error.message}`);
@@ -87,10 +91,38 @@ export class UsersService {
         try {
             const existingUser = await this.getUserByTerm(user);
 
-            return existingUser == null ? false: !existingUser;
+            return existingUser == null ? false : !existingUser;
         }
         catch (error) {
             return null;
+        }
+    }
+
+    async updateUser(user: UpdateUserDto, term: string): Promise<HttpResponse<string>> {
+        try {
+            const existingUser = await this.getUSerByEmailOrCelphone(term);
+
+            if (!existingUser) {
+                throw new UserNotFoundException(term);
+            }
+
+            if (existingUser.response.times_logged) {
+                user.times_logged = existingUser.response.times_logged + user.times_logged;
+            }
+
+            await this.supabaseConnection.getClient()
+                .from('users')
+                .update(user)
+                .or(`email.eq.${term},celphone.eq.${term}`)
+                .single();
+
+            return { httpStatus: HttpStatus.OK, response: "User updated successfully" };
+        }
+        catch (error) {
+            if (error instanceof UserNotFoundException) {
+                throw error;
+            }
+            throw new Error(`${error.message}`);
         }
     }
 }
