@@ -18,8 +18,7 @@ export class UsersService {
             const { data }: { data: User } = await this.supabaseConnection.getClient()
                 .from('users')
                 .select()
-                .eq('email', term)
-                .eq('celphone', term)
+                .or(`email.eq.${term},celphone.eq.${term}`)
                 .single();
 
             if (!data) {
