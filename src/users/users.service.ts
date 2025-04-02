@@ -87,6 +87,25 @@ export class UsersService {
         }
     }
 
+    async getUserById(id: number): Promise<User> {
+        try {
+            const { data }: { data: User } = await this.supabaseConnection.getClient()
+                .from('users')
+                .select()
+                .eq('id', id)
+                .single();
+
+            if (!data) {
+                throw new UserNotFoundException(id.toString());
+            }
+
+            return data;
+        }
+        catch (error) {
+            return null;
+        }
+    }
+
     async verifyUserExist(user: CreateUserDto): Promise<boolean> {
         try {
             const existingUser = await this.getUserByTerm(user);
