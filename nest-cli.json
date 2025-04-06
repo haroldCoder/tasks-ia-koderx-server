@@ -1,8 +1,32 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src",
+  "sourceRoot": "apps/tasks-ia-koderx-server/src",
   "compilerOptions": {
-    "deleteOutDir": true
+    "deleteOutDir": true,
+    "webpack": true,
+    "tsConfigPath": "apps/tasks-ia-koderx-server/tsconfig.app.json"
+  },
+  "monorepo": true,
+  "root": "apps/tasks-ia-koderx-server",
+  "projects": {
+    "tasks-ia-koderx-server": {
+      "type": "application",
+      "root": "apps/tasks-ia-koderx-server",
+      "entryFile": "main",
+      "sourceRoot": "apps/tasks-ia-koderx-server/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/tasks-ia-koderx-server/tsconfig.app.json"
+      }
+    },
+    "payment": {
+      "type": "application",
+      "root": "apps/payment",
+      "entryFile": "main",
+      "sourceRoot": "apps/payment/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/payment/tsconfig.app.json"
+      }
+    }
   }
 }
