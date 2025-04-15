@@ -2,7 +2,6 @@ import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { PaymentService } from './payment.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
-import { UpdatePaymentDto } from './dto/update-payment.dto';
 
 @Controller()
 export class PaymentController {
@@ -13,23 +12,13 @@ export class PaymentController {
     return this.paymentService.create(createPaymentDto);
   }
 
-  @MessagePattern('findAllPayment')
-  findAll() {
-    return this.paymentService.findAll();
+  @MessagePattern('findOnePayment-checkout')
+  findOne(@Payload() email: string) {
+    return this.paymentService.checkCustomerPayments(email);
   }
 
-  @MessagePattern('findOnePayment')
-  findOne(@Payload() id: number) {
-    return this.paymentService.findOne(id);
-  }
-
-  @MessagePattern('updatePayment')
-  update(@Payload() updatePaymentDto: UpdatePaymentDto) {
-    return this.paymentService.update(updatePaymentDto.id, updatePaymentDto);
-  }
-
-  @MessagePattern('removePayment')
-  remove(@Payload() id: number) {
-    return this.paymentService.remove(id);
+  @MessagePattern('changeUser-premium')
+  changeUserToPremium(@Payload() email: string) {
+    return this.paymentService.changeUserToPremium(email);
   }
 }

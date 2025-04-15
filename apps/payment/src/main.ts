@@ -9,7 +9,7 @@ async function bootstrap() {
     {
       transport: Transport.TCP,
       options: {
-        port: parseInt(process.env.PORT_PAYMENT) ?? 3002,
+        port: process.env.PORT_PAYMENT ? parseInt(process.env.PORT_PAYMENT) : 3002,
       }
     }
   );

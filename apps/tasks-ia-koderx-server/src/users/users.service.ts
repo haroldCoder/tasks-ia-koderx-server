@@ -1,11 +1,11 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { SupabaseService } from 'src/database/supabase.service';
+import { SupabaseService } from '../database/supabase.service';
 import { User } from './dto/user.dto';
 import { HttpResponse } from './types/http-response';
-import { UserNotFoundException } from 'src/shared/exceptions/users/user-not-found';
+import { UserNotFoundException } from '../shared/exceptions/users/user-not-found';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UserBadRequestException } from 'src/shared/exceptions/users/user-bad-request';
-import { AuthService } from 'src/auth/auth.service';
+import { UserBadRequestException } from '../shared/exceptions/users/user-bad-request';
+import { AuthService } from '../auth/auth.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
