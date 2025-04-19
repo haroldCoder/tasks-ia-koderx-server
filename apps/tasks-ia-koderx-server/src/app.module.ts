@@ -16,7 +16,8 @@ import { SubscriptionModule } from './subscription/subscription.module';
         name: 'PAYMENT_SERVICE',
         transport: Transport.TCP,
         options: {
-          port: parseInt(process.env.PORT_PAYMENT) ?? 3002,
+          host: process.env.HOST_PAYMENT ?? 'microservice',
+          port: process.env.PORT_PAYMENT ? parseInt(process.env.PORT_PAYMENT) : 3002,
         },
       },
     ]),

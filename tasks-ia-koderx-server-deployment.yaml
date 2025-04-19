@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tasks-ia-koderx-server
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: tasks-ia-koderx-server
+  template:
+    metadata:
+      labels:
+        app: tasks-ia-koderx-server
+    spec:
+      containers:
+      - name: tasks-ia-koderx-server
+        image: koder22/tasks-ia-koderx-server:tag
+        ports:
+        - containerPort: 3000
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+          requests:
+            cpu: "200m"
+            memory: "256Mi"

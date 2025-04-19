@@ -1,5 +1,5 @@
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { CreatePaymentDto } from 'apps/payment/src/dto/create-payment.dto';
+import { CreatePaymentDto } from "../shared/dto/payment.dto"
 import { ClientProxy } from '@nestjs/microservices';
 import { HttpResponse } from '../users/types/http-response';
 import { Payment } from './interfaces/payment-verified.interface';
@@ -14,16 +14,12 @@ export class SubscriptionService {
       const response = await this.client.send('createPayment',
         createSubscriptionDto
       ).toPromise();
-
       return {
         response,
         httpStatus: 200
       };
     } catch (err) {
-      return {
-        response: err.message,
-        httpStatus: 400
-      };
+      throw err;
     }
   }
 
@@ -40,10 +36,7 @@ export class SubscriptionService {
 
     } 
     catch(err) {
-      return {
-        response: err.message,
-        httpStatus: HttpStatus.BAD_REQUEST
-      };
+      throw err;
     }
   }
 
@@ -58,11 +51,8 @@ export class SubscriptionService {
         httpStatus: HttpStatus.OK
       };
     }
-    catch(error) {
-      return {
-        response: error.message,
-        httpStatus: HttpStatus.BAD_REQUEST
-      };
+    catch(err) {
+      throw err;
     }
   }
 }
