@@ -1,12 +1,12 @@
 import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
-import { SupabaseService } from 'src/database/supabase.service';
+import { SupabaseService } from '../database/supabase.service';
 import { Task } from './entities/task.entity';
-import { HttpResponse } from 'src/users/types/http-response';
+import { HttpResponse } from '../users/types/http-response';
 import { TaskNotFoundException } from './exceptions/task-not-found';
-import { UsersService } from 'src/users/users.service';
-import { UserNotFoundException } from 'src/shared/exceptions/users/user-not-found';
+import { UsersService } from '../users/users.service';
+import { UserNotFoundException } from '../shared/exceptions/users/user-not-found';
 
 @Injectable()
 export class TasksService {

@@ -1,0 +1,28 @@
+services:
+  microservice:
+    build:
+      context: .
+      dockerfile: dockerfile.payment
+    container_name: payment-microservice
+    ports:
+      - "3002:3002"
+    networks:
+      - app-network
+
+  client:
+    build:
+      context: .
+      dockerfile: dockerfile
+    container_name: tasks-ia-koderx
+    ports:
+      - "3005:3000"
+    depends_on:
+      - microservice
+    environment:
+      - PORT_PAYMENT=3002
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

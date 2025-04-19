@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { HttpResponse } from 'src/users/types/http-response';
+import { CreateUserDto } from '../users/dto/create-user.dto';
+import { HttpResponse } from '../users/types/http-response';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
