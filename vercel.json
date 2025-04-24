@@ -1,0 +1,15 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "apps/tasks-ia-koderx-server/src/main.ts",
+        "use": "@vercel/node"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "apps/tasks-ia-koderx-server/src/main.ts"
+      }
+    ]
+  }
