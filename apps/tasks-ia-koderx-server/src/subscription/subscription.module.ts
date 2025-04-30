@@ -10,6 +10,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         name: 'SUBSCRIPTION_SERVICE',
         transport: Transport.TCP,
         options: {
+          host: process.env.HOST_PAYMENT ?? 'microservice',
           port: process.env.PORT_PAYMENT ? parseInt(process.env.PORT_PAYMENT) : 3002,
         },
       },
