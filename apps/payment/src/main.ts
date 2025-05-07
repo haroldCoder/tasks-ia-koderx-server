@@ -7,10 +7,14 @@ async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     PaymentModule,
     {
-      transport: Transport.TCP,
+      transport: Transport.RMQ,
       options: {
-        host: '0.0.0.0',
-        port: process.env.PORT_PAYMENT ? parseInt(process.env.PORT_PAYMENT) : 3002,
+        urls: [process.env.RABBITMQ_URL || 'amqp://localhost:5672'],
+        queue: 'subscription_queue',
+        queueOptions: {
+          durable: false,
+        },
+        noAck: true,
       }
     }
   );

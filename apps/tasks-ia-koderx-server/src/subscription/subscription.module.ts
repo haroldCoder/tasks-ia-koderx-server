@@ -8,11 +8,15 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     ClientsModule.register([
       {
         name: 'SUBSCRIPTION_SERVICE',
-        transport: Transport.TCP,
+        transport: Transport.RMQ,
         options: {
-          host: process.env.HOST_PAYMENT ?? 'microservice',
-          port: process.env.PORT_PAYMENT ? parseInt(process.env.PORT_PAYMENT) : 3002,
-        },
+          urls: [process.env.RABBITMQ_URL || 'amqp://localhost:5672'],
+          queue: 'subscription_queue',
+          queueOptions: {
+            durable: false,
+          },
+          noAck: true,
+        }
       },
     ]),
   ],
