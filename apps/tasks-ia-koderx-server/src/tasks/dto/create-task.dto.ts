@@ -48,4 +48,13 @@ export class CreateTaskDto {
     @IsNotEmpty()
     @IsNumber()
     userId: number;
+
+    @ApiProperty({
+        example: 2,
+        description: 'Id of the users who are assigned to the task in application',
+        required: true
+    })
+    @IsNotEmpty()
+    @IsNumber()
+    id_task_app: number;
 }
