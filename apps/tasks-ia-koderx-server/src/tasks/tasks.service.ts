@@ -7,6 +7,7 @@ import { HttpResponse } from '../users/types/http-response';
 import { TaskNotFoundException } from './exceptions/task-not-found';
 import { UsersService } from '../users/users.service';
 import { UserNotFoundException } from '../shared/exceptions/users/user-not-found';
+import { TasksBadRequestException } from './exceptions/task-bad-request';
 
 @Injectable()
 export class TasksService {
@@ -21,6 +22,10 @@ export class TasksService {
         throw new NotFoundException(`User not found with id: ${createTaskDto.userId}`);
       }
 
+      if(!createTaskDto.id_task_app){
+        new TasksBadRequestException('Id of the users who are assigned to the task in application is required');
+      }
+
       const { error } = await this.supabaseConnection
         .getClient()
         .from('tasks')
@@ -30,7 +35,7 @@ export class TasksService {
         throw new Error(`Error to create Task: ${error.message}`);
       }
 
-      return { httpStatus: HttpStatus.OK, response: 'Task created successfully' };
+      return { httpStatus: HttpStatus.CREATED, response: 'Task created successfully' };
     }
     catch (error) {
       if (error instanceof NotFoundException) {
@@ -151,6 +156,29 @@ export class TasksService {
       return { httpStatus: HttpStatus.OK, response: 'Task deleted successfully' };
     }
     catch (error) {
+      throw new Error(`${error.message}`);
+    }
+  }
+
+  async searchTaskByIdApp(id_task_app: number): Promise<HttpResponse<Task>> {
+    try {
+      const { data } = await this.supabaseConnection
+       .getClient()
+       .from('tasks')
+       .select()
+       .eq('id_task_app', id_task_app)
+       .single()
+
+       if(!data){
+        throw new TaskNotFoundException(id_task_app);
+       }
+       
+       return { httpStatus: HttpStatus.OK, response: data  };
+    }
+    catch (error) {
+      if(error instanceof TaskNotFoundException){
+        throw error;
+      }
       throw new Error(`${error.message}`);
     }
   }

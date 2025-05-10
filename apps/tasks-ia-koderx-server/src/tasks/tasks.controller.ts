@@ -12,7 +12,7 @@ export class TasksController {
   @Post(tasksRoutes.post_tasks)
   @ApiOperation({ summary: 'Create a new task' })
   @ApiBody({ type: CreateTaskDto })
-  @ApiResponse({ status: 200, description: 'Task created successfully' })
+  @ApiResponse({ status: 201, description: 'Task created successfully' })
   create(@Body() createTaskDto: CreateTaskDto) {
     return this.tasksService.create(createTaskDto);
   }
@@ -46,7 +46,19 @@ export class TasksController {
   }
 
   @Delete(tasksRoutes.delete_tasks)
+  @ApiOperation({ summary: 'Delete a task by id' })
+  @ApiParam({ name: 'id', required: true, description: 'Id of the task' })
+  @ApiResponse({ status: 200, description: 'Task deleted successfully' })
+  @ApiResponse({ status: 404, description: 'Task not found' })  
   remove(@Param('id') id: string) {
     return this.tasksService.remove(+id);
+  }
+
+  @Get(tasksRoutes.get_task_id_app)
+  @ApiOperation({ summary: 'Get a task by id and id of the application' })
+  @ApiResponse({ status: 200, description: 'Task found successfully' })
+  @ApiResponse({ status: 404, description: 'Task not found' })
+  findOneByIdApp(@Param('idapp') id_app: number) {
+    return this.tasksService.searchTaskByIdApp(+id_app);
   }
 }

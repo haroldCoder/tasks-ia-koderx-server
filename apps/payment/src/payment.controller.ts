@@ -6,19 +6,30 @@ import { CreatePaymentDto } from './dto/create-payment.dto';
 @Controller()
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
-
   @MessagePattern('createPayment')
-  create(@Payload() createPaymentDto: CreatePaymentDto) {
-    return this.paymentService.create(createPaymentDto);
+  async create(@Payload() createPaymentDto: CreatePaymentDto) {
+    try {
+      return await this.paymentService.create(createPaymentDto);
+    } catch (error) {
+      throw error;
+    }
   }
 
   @MessagePattern('findOnePayment-checkout')
-  findOne(@Payload() email: string) {
-    return this.paymentService.checkCustomerPayments(email);
+  async findOne(@Payload() email: string) {
+    try {
+      return await this.paymentService.checkCustomerPayments(email);
+    } catch (error) {
+      throw error;
+    }
   }
 
   @MessagePattern('changeUser-premium')
-  changeUserToPremium(@Payload() email: string) {
-    return this.paymentService.changeUserToPremium(email);
+  async changeUserToPremium(@Payload() email: string) {
+    try {
+      return await this.paymentService.changeUserToPremium(email);
+    } catch (error) {
+      throw error;
+    }
   }
 }
