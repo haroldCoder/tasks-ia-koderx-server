@@ -57,6 +57,7 @@ export class TasksService {
     priority, 
     completed, 
     userId,
+    id_task_app,
     users (
       id,
       email,
