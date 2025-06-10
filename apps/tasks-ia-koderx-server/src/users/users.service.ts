@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { SupabaseService } from '../database/supabase.service';
-import { User } from './dto/user.dto';
+import { User } from './entities/users.entity';
 import { HttpResponse } from './types/http-response';
 import { UserNotFoundException } from '../shared/exceptions/users/user-not-found';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -51,14 +51,21 @@ export class UsersService {
                 throw new UserBadRequestException('Email or celphone is required');
             }
 
-            await this.supabaseConnection.getClient()
+            const { error } = await this.supabaseConnection.getClient()
                 .from('users')
                 .insert(user);
+
+            if (error) {
+                throw new UserBadRequestException(error.details);
+            }
+                
 
             return { httpStatus: HttpStatus.OK, response: 'User created successfully' }
         }
         catch (error) {
-            if (error instanceof UserBadRequestException || error instanceof UserNotFoundException) {
+            if (error instanceof UserBadRequestException 
+                || error instanceof UserNotFoundException
+                || error instanceof UserBadRequestException) {
                 console.log(error);
 
                 throw error;
