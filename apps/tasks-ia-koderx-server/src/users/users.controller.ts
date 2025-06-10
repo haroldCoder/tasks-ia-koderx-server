@@ -3,12 +3,13 @@ import { UsersService } from './users.service';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { usersRoutes, version } from './routes/users.routes';
 
-@Controller('users')
+@Controller(version)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get("user/:term")
+  @Get(usersRoutes.getUser)
   @ApiOperation({ summary: 'Get a user by email or cellphone' })
   @ApiParam({ name: 'term', required: true, description: 'Email or cellphone number of the user' })
   @ApiResponse({ status: 200, description: 'User found successfully' })
@@ -17,7 +18,7 @@ export class UsersController {
     return this.usersService.getUSerByEmailOrCelphone(term)
   }
 
-  @Post("login")
+  @Post(usersRoutes.login)
   @ApiOperation({ summary: 'Login user' })
   @ApiBody({ type: CreateUserDto })
   @ApiResponse({ status: 200, description: 'User logged successfully' })
@@ -27,7 +28,7 @@ export class UsersController {
     return this.usersService.LoginUser(user)
   }
 
-  @Patch("user/:term")
+  @Patch(usersRoutes.updateUser)
   @ApiOperation({ summary: 'Update user' })
   @ApiParam({ name: 'term', required: true, description: 'Email or cellphone number of the user' })
   @ApiBody({ type: UpdateUserDto })
