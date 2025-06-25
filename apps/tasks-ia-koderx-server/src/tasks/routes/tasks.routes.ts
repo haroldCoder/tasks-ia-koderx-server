@@ -8,4 +8,5 @@ export const tasksRoutes = {
     delete_tasks: `/tasks/:id`,
     get_task: `/task/:id`,
     get_task_id_app: `/task/search/:idapp`,
+    assign_task_aditional: `/assign-aditional/:id`,
 }
