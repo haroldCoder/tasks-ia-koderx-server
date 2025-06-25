@@ -12,7 +12,7 @@ import { TasksBadRequestException } from './exceptions/task-bad-request';
 @Injectable()
 export class TasksService {
 
-  constructor(private readonly supabaseConnection: SupabaseService, 
+  constructor(private readonly supabaseConnection: SupabaseService,
     private readonly usersService: UsersService) { }
   async create(createTaskDto: CreateTaskDto): Promise<HttpResponse<string>> {
     try {
@@ -22,7 +22,7 @@ export class TasksService {
         throw new NotFoundException(`User not found with id: ${createTaskDto.userId}`);
       }
 
-      if(!createTaskDto.id_task_app){
+      if (!createTaskDto.id_task_app) {
         new TasksBadRequestException('Id of the users who are assigned to the task in application is required');
       }
 
@@ -62,7 +62,13 @@ export class TasksService {
       id,
       email,
       celphone
-    )
+    ),
+    task_aditional (
+      id,
+      start_date,
+      end_date,
+      type
+        )
       `)
         .or(`email.eq.${term},celphone.eq.${term}`, { referencedTable: 'users' })
 
@@ -89,7 +95,21 @@ export class TasksService {
       const { data, error } = await this.supabaseConnection
         .getClient()
         .from('tasks')
-        .select()
+        .select(`
+          id, 
+          title, 
+          description, 
+          priority, 
+          completed, 
+          userId,
+          id_task_app,
+            task_aditional (
+              id,
+              start_date,
+              end_date, 
+              type
+            )
+          `)
         .eq('id', id)
         .single();
 
@@ -160,20 +180,34 @@ export class TasksService {
   async searchTaskByIdApp(id_task_app: number): Promise<HttpResponse<Task>> {
     try {
       const { data } = await this.supabaseConnection
-       .getClient()
-       .from('tasks')
-       .select()
-       .eq('id_task_app', id_task_app)
-       .single()
+        .getClient()
+        .from('tasks')
+        .select(`
+          id, 
+          title, 
+          description, 
+          priority, 
+          completed, 
+          userId,
+          id_task_app,
+            task_aditional (
+              id,
+              start_date,
+              end_date, 
+              type
+            )
+          `)
+        .eq('id_task_app', id_task_app)
+        .single()
 
-       if(!data){
+      if (!data) {
         throw new TaskNotFoundException(id_task_app);
-       }
-       
-       return { httpStatus: HttpStatus.OK, response: data  };
+      }
+
+      return { httpStatus: HttpStatus.OK, response: data };
     }
     catch (error) {
-      if(error instanceof TaskNotFoundException){
+      if (error instanceof TaskNotFoundException) {
         throw error;
       }
       throw new Error(`${error.message}`);
