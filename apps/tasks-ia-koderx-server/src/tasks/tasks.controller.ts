@@ -4,10 +4,15 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { main, tasksRoutes, version } from './routes/tasks.routes';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
+import { UpdateTaskAditionalDto } from './dto/update-task-aditional.dto';
+import { AditionalTaskService } from './aditionalTask.service';
 
 @Controller(`${version}${main}`)
 export class TasksController {
-  constructor(private readonly tasksService: TasksService) {}
+  constructor(
+    private readonly tasksService: TasksService,
+    private readonly aditionalTaskService: AditionalTaskService
+  ) {}
 
   @Post(tasksRoutes.post_tasks)
   @ApiOperation({ summary: 'Create a new task' })
@@ -60,5 +65,15 @@ export class TasksController {
   @ApiResponse({ status: 404, description: 'Task not found' })
   findOneByIdApp(@Param('idapp') id_app: number) {
     return this.tasksService.searchTaskByIdApp(+id_app);
+  }
+
+  @Patch(tasksRoutes.assign_task_aditional)
+  @ApiOperation({ summary: 'Assign additional information to a task' })
+  @ApiParam({ name: 'id', required: true, description: 'Id of the task or aditional data' })
+  @ApiBody({ type: UpdateTaskAditionalDto, required: true, description: 'Additional data to assign to the task' })
+  @ApiResponse({ status: 200, description: 'Additional data assigned successfully' })
+  @ApiResponse({ status: 404, description: 'Task not found' })
+  assignAditional(@Param('id') id: string, @Body() updateTaskAditionalDto: UpdateTaskAditionalDto) {
+    return this.aditionalTaskService.assignAditional(+id, updateTaskAditionalDto); 
   }
 }

@@ -93,10 +93,6 @@ export class TasksService {
         .eq('id', id)
         .single();
 
-      if (error) {
-        throw new Error(`Error to search Task: ${error.message}`);
-      }
-
       if (!data) {
         throw new TaskNotFoundException(id);
       }
