@@ -177,7 +177,7 @@ export class TasksService {
     }
   }
 
-  async searchTaskByIdApp(id_task_app: number): Promise<HttpResponse<Task>> {
+  async searchTaskByIdApp(id_task_app: number, userId: number): Promise<HttpResponse<Task>> {
     try {
       const { data } = await this.supabaseConnection
         .getClient()
@@ -198,6 +198,7 @@ export class TasksService {
             )
           `)
         .eq('id_task_app', id_task_app)
+        .eq('userId', userId)
         .single()
 
       if (!data) {

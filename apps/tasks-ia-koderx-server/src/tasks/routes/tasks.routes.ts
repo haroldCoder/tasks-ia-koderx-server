@@ -7,6 +7,6 @@ export const tasksRoutes = {
     patch_tasks: `/tasks/:id`,
     delete_tasks: `/tasks/:id`,
     get_task: `/task/:id`,
-    get_task_id_app: `/task/search/:idapp`,
+    get_task_id_app: `/task/search/:idapp/:userId`,
     assign_task_aditional: `/assign-aditional/:id`,
 }

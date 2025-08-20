@@ -63,8 +63,8 @@ export class TasksController {
   @ApiOperation({ summary: 'Get a task by id and id of the application' })
   @ApiResponse({ status: 200, description: 'Task found successfully' })
   @ApiResponse({ status: 404, description: 'Task not found' })
-  findOneByIdApp(@Param('idapp') id_app: number) {
-    return this.tasksService.searchTaskByIdApp(+id_app);
+  findOneByIdApp(@Param('idapp') id_app: number, @Param('userId') userId: number) {
+    return this.tasksService.searchTaskByIdApp(+id_app, +userId);
   }
 
   @Patch(tasksRoutes.assign_task_aditional)
