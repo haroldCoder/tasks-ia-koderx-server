@@ -1,7 +1,7 @@
-import { NotFoundException } from "@nestjs/common";
+import { NotFoundException } from '@nestjs/common';
 
 class TaskNotFoundException extends NotFoundException {
-  constructor(id: number) {
+  constructor(id: number | string) {
     super(`Task not found: ${id}`);
   }
 }

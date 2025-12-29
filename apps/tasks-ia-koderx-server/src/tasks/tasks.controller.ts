@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
@@ -11,7 +19,7 @@ import { AditionalTaskService } from './aditionalTask.service';
 export class TasksController {
   constructor(
     private readonly tasksService: TasksService,
-    private readonly aditionalTaskService: AditionalTaskService
+    private readonly aditionalTaskService: AditionalTaskService,
   ) {}
 
   @Post(tasksRoutes.post_tasks)
@@ -24,7 +32,11 @@ export class TasksController {
 
   @Get(tasksRoutes.get_tasks_user)
   @ApiOperation({ summary: 'Get all tasks by user' })
-  @ApiParam({ name: 'term', required: true, description: 'Email or cellphone number of the user' })
+  @ApiParam({
+    name: 'term',
+    required: true,
+    description: 'Email or cellphone number of the user',
+  })
   @ApiResponse({ status: 200, description: 'Tasks found successfully' })
   @ApiResponse({ status: 404, description: 'User not found' })
   findAll(@Param('term') term: string) {
@@ -54,7 +66,7 @@ export class TasksController {
   @ApiOperation({ summary: 'Delete a task by id' })
   @ApiParam({ name: 'id', required: true, description: 'Id of the task' })
   @ApiResponse({ status: 200, description: 'Task deleted successfully' })
-  @ApiResponse({ status: 404, description: 'Task not found' })  
+  @ApiResponse({ status: 404, description: 'Task not found' })
   remove(@Param('id') id: string) {
     return this.tasksService.remove(+id);
   }
@@ -63,17 +75,37 @@ export class TasksController {
   @ApiOperation({ summary: 'Get a task by id and id of the application' })
   @ApiResponse({ status: 200, description: 'Task found successfully' })
   @ApiResponse({ status: 404, description: 'Task not found' })
-  findOneByIdApp(@Param('idapp') id_app: number, @Param('userId') userId: number) {
-    return this.tasksService.searchTaskByIdApp(+id_app, +userId);
+  findOneByIdApp(
+    @Param('idapp') id_app: string,
+    @Param('userId') userId: number,
+  ) {
+    return this.tasksService.searchTaskByIdApp(id_app, +userId);
   }
 
   @Patch(tasksRoutes.assign_task_aditional)
   @ApiOperation({ summary: 'Assign additional information to a task' })
-  @ApiParam({ name: 'id', required: true, description: 'Id of the task or aditional data' })
-  @ApiBody({ type: UpdateTaskAditionalDto, required: true, description: 'Additional data to assign to the task' })
-  @ApiResponse({ status: 200, description: 'Additional data assigned successfully' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    description: 'Id of the task or aditional data',
+  })
+  @ApiBody({
+    type: UpdateTaskAditionalDto,
+    required: true,
+    description: 'Additional data to assign to the task',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Additional data assigned successfully',
+  })
   @ApiResponse({ status: 404, description: 'Task not found' })
-  assignAditional(@Param('id') id: string, @Body() updateTaskAditionalDto: UpdateTaskAditionalDto) {
-    return this.aditionalTaskService.assignAditional(+id, updateTaskAditionalDto); 
+  assignAditional(
+    @Param('id') id: string,
+    @Body() updateTaskAditionalDto: UpdateTaskAditionalDto,
+  ) {
+    return this.aditionalTaskService.assignAditional(
+      +id,
+      updateTaskAditionalDto,
+    );
   }
 }

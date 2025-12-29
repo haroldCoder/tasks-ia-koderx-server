@@ -11,19 +11,24 @@ import { TasksBadRequestException } from './exceptions/task-bad-request';
 
 @Injectable()
 export class TasksService {
-
-  constructor(private readonly supabaseConnection: SupabaseService,
-    private readonly usersService: UsersService) { }
+  constructor(
+    private readonly supabaseConnection: SupabaseService,
+    private readonly usersService: UsersService,
+  ) {}
   async create(createTaskDto: CreateTaskDto): Promise<HttpResponse<string>> {
     try {
       const data = await this.usersService.getUserById(createTaskDto.userId);
 
       if (!data) {
-        throw new NotFoundException(`User not found with id: ${createTaskDto.userId}`);
+        throw new NotFoundException(
+          `User not found with id: ${createTaskDto.userId}`,
+        );
       }
 
       if (!createTaskDto.id_task_app) {
-        new TasksBadRequestException('Id of the users who are assigned to the task in application is required');
+        new TasksBadRequestException(
+          'Id of the users who are assigned to the task in application is required',
+        );
       }
 
       const { error } = await this.supabaseConnection
@@ -35,9 +40,11 @@ export class TasksService {
         throw new Error(`Error to create Task: ${error.message}`);
       }
 
-      return { httpStatus: HttpStatus.CREATED, response: 'Task created successfully' };
-    }
-    catch (error) {
+      return {
+        httpStatus: HttpStatus.CREATED,
+        response: 'Task created successfully',
+      };
+    } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
       }
@@ -50,7 +57,8 @@ export class TasksService {
       const { data, error } = await this.supabaseConnection
         .getClient()
         .from('tasks')
-        .select(`
+        .select(
+          `
     id, 
     title, 
     description, 
@@ -69,8 +77,11 @@ export class TasksService {
       end_date,
       type
         )
-      `)
-        .or(`email.eq.${term},celphone.eq.${term}`, { referencedTable: 'users' })
+      `,
+        )
+        .or(`email.eq.${term},celphone.eq.${term}`, {
+          referencedTable: 'users',
+        });
 
       if (error) {
         throw new Error(`Error to search User: ${error.message}`);
@@ -81,8 +92,7 @@ export class TasksService {
       }
 
       return { httpStatus: HttpStatus.OK, response: data };
-    }
-    catch (error) {
+    } catch (error) {
       if (error instanceof UserNotFoundException) {
         throw error;
       }
@@ -95,7 +105,8 @@ export class TasksService {
       const { data, error } = await this.supabaseConnection
         .getClient()
         .from('tasks')
-        .select(`
+        .select(
+          `
           id, 
           title, 
           description, 
@@ -109,7 +120,8 @@ export class TasksService {
               end_date, 
               type
             )
-          `)
+          `,
+        )
         .eq('id', id)
         .single();
 
@@ -118,8 +130,7 @@ export class TasksService {
       }
 
       return { httpStatus: HttpStatus.OK, response: data };
-    }
-    catch (error) {
+    } catch (error) {
       if (error instanceof TaskNotFoundException) {
         throw error;
       }
@@ -127,7 +138,10 @@ export class TasksService {
     }
   }
 
-  async update(id: number, updateTaskDto: UpdateTaskDto): Promise<HttpResponse<string>> {
+  async update(
+    id: number,
+    updateTaskDto: UpdateTaskDto,
+  ): Promise<HttpResponse<string>> {
     try {
       const { httpStatus } = await this.findOne(id);
 
@@ -145,9 +159,11 @@ export class TasksService {
         throw new Error(`Error to update Task: ${error.message}`);
       }
 
-      return { httpStatus: HttpStatus.OK, response: 'Task updated successfully' };
-    }
-    catch (error) {
+      return {
+        httpStatus: HttpStatus.OK,
+        response: 'Task updated successfully',
+      };
+    } catch (error) {
       throw new Error(`${error.message}`);
     }
   }
@@ -170,19 +186,25 @@ export class TasksService {
         throw new Error(`Error to delete Task: ${error.message}`);
       }
 
-      return { httpStatus: HttpStatus.OK, response: 'Task deleted successfully' };
-    }
-    catch (error) {
+      return {
+        httpStatus: HttpStatus.OK,
+        response: 'Task deleted successfully',
+      };
+    } catch (error) {
       throw new Error(`${error.message}`);
     }
   }
 
-  async searchTaskByIdApp(id_task_app: number, userId: number): Promise<HttpResponse<Task>> {
+  async searchTaskByIdApp(
+    id_task_app: string,
+    userId: number,
+  ): Promise<HttpResponse<Task>> {
     try {
       const { data } = await this.supabaseConnection
         .getClient()
         .from('tasks')
-        .select(`
+        .select(
+          `
           id, 
           title, 
           description, 
@@ -196,18 +218,18 @@ export class TasksService {
               end_date, 
               type
             )
-          `)
+          `,
+        )
         .eq('id_task_app', id_task_app)
         .eq('userId', userId)
-        .single()
+        .single();
 
       if (!data) {
         throw new TaskNotFoundException(id_task_app);
       }
 
       return { httpStatus: HttpStatus.OK, response: data };
-    }
-    catch (error) {
+    } catch (error) {
       if (error instanceof TaskNotFoundException) {
         throw error;
       }
