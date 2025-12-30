@@ -66,7 +66,7 @@ export class TasksService {
     completed, 
     userId,
     id_task_app,
-    users (
+    users!inner (
       id,
       email,
       celphone
